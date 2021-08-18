@@ -5,11 +5,70 @@ import EditNodeModal from '../../Modals/EditNodeModal'
 export const RenderTree = (props) => {
   const [treeNodeId, settreeNodeId] = useState(Number)
   const [treeEditNodeId, settreeEditNodeId] = useState(Number)
+  const [tempTree, settempTree] = useState({})
   const toggleFormModal = (currentNode) => {
     settreeNodeId(currentNode.id)
   }
+  console.log(tempTree)
   const toggleEditFormModal = (currentNode) => {
     settreeEditNodeId(currentNode.id)
+  }
+
+  const showBranch = (tree, currentNode) => {
+    if (tree.id === currentNode.id) {
+      tree.descendants = [...tempTree[tree.id], ...tree.descendants]
+      const tempTreeClone = { ...tempTree }
+      delete tempTreeClone[tree.id]
+      settempTree(tempTreeClone)
+      return tree
+    } else {
+      tree.descendants.map((node, index) => {
+        if (node.id === currentNode.id) {
+          node.descendants = [...tempTree[node.id], ...node.descendants]
+          const tempTreeClone = { ...tempTree }
+          delete tempTreeClone[node.id]
+          settempTree(tempTreeClone)
+          return tree
+        } else {
+          return showBranch(node, currentNode)
+        }
+      })
+    }
+    return tree
+  }
+
+  const hideBranch = (tree, currentNode) => {
+    if (tree.id === currentNode.id) {
+      const tempTreeClone = { ...tempTree }
+      tempTreeClone[tree.id] = tree.descendants
+      settempTree(tempTreeClone)
+      tree.descendants = []
+      return tree
+    } else {
+      tree.descendants.map((node, index) => {
+        if (node.id === currentNode.id) {
+          const tempTreeClone = { ...tempTree }
+          tempTreeClone[node.id] = node.descendants
+          settempTree(tempTreeClone)
+          node.descendants = []
+          return tree
+        } else {
+          return hideBranch(node, currentNode)
+        }
+      })
+    }
+    return tree
+  }
+  const hideOrShowBranchHandler = (currentNode) => {
+    const treeCopy = { ...props.tree }
+    let fullTree
+    if (tempTree[currentNode.id]) {
+      fullTree = showBranch(treeCopy, currentNode)
+      props.settree(fullTree)
+    } else {
+      fullTree = hideBranch(treeCopy, currentNode)
+      props.settree(fullTree)
+    }
   }
 
   const deleteNode = (tree, currentNode) => {
@@ -88,11 +147,27 @@ export const RenderTree = (props) => {
                   x
                 </span>
                 <span
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'pointer', marginRight: '5px' }}
                   onClick={() => toggleEditFormModal(currentNode)}
                 >
                   edit
                 </span>
+
+                {tempTree[currentNode.id] ? (
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => hideOrShowBranchHandler(currentNode)}
+                  >
+                    show
+                  </span>
+                ) : (
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => hideOrShowBranchHandler(currentNode)}
+                  >
+                    hide
+                  </span>
+                )}
                 {treeNodeId === currentNode.id ? (
                   <AddNodeModal
                     tree={props.tree}
@@ -153,11 +228,26 @@ export const RenderTree = (props) => {
                   x
                 </span>
                 <span
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'pointer', marginRight: '5px' }}
                   onClick={() => toggleEditFormModal(currentNode)}
                 >
                   edit
                 </span>
+                {tempTree[currentNode.id] ? (
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => hideOrShowBranchHandler(currentNode)}
+                  >
+                    show
+                  </span>
+                ) : (
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => hideOrShowBranchHandler(currentNode)}
+                  >
+                    hide
+                  </span>
+                )}
                 {treeNodeId === currentNode.id ? (
                   <AddNodeModal
                     tree={props.tree}

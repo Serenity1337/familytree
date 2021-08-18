@@ -91,10 +91,10 @@ export const AddNodeModal = (props) => {
         <div
           style={{ display: 'flex', justifyContent: 'left', marginTop: '10px' }}
         >
-          <button style={{ marginRight: '65px' }} onClick={cancelNodeHandler}>
-            cancel
+          <button style={{ marginRight: '65px' }} type='submit'>
+            save
           </button>
-          <button type='submit'>save</button>
+          <button onClick={cancelNodeHandler}>cancel</button>
         </div>
       </form>
     </div>
