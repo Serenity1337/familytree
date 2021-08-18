@@ -7,6 +7,29 @@ export const RenderTree = (props) => {
     settreeNodeId(familyData.id)
   }
 
+  const deleteNode = (tree, currentNode) => {
+    console.log('test')
+    if (tree.id === currentNode.id) {
+      console.log('asd')
+      return tree
+    } else {
+      tree.descendants.map((node, index) => {
+        if (node.id === currentNode.id) {
+          tree.descendants.splice(index, 1)
+          return tree
+        } else {
+          return deleteNode(node, currentNode)
+        }
+      })
+    }
+    return tree
+  }
+  const deleteNodeHandler = (currentNode) => {
+    const treeCopy = { ...props.tree }
+    const fullTree = deleteNode(treeCopy, currentNode)
+    props.settree(fullTree)
+  }
+
   const RenderTreeHandler = (currentNode) => {
     console.log(currentNode)
     const elements = []
@@ -53,7 +76,12 @@ export const RenderTree = (props) => {
                 >
                   +
                 </span>
-                <span style={{ margin: '0px 15px', cursor: 'pointer' }}>x</span>
+                <span
+                  style={{ margin: '0px 15px', cursor: 'pointer' }}
+                  onClick={() => deleteNodeHandler(currentNode)}
+                >
+                  x
+                </span>
                 <span style={{ cursor: 'pointer' }}>edit</span>
                 {treeNodeId === currentNode.id ? (
                   <AddNodeModal
@@ -100,7 +128,12 @@ export const RenderTree = (props) => {
                 >
                   +
                 </span>
-                <span style={{ margin: '0px 15px', cursor: 'pointer' }}>x</span>
+                <span
+                  style={{ margin: '0px 15px', cursor: 'pointer' }}
+                  onClick={() => deleteNodeHandler(currentNode)}
+                >
+                  x
+                </span>
                 <span style={{ cursor: 'pointer' }}>edit</span>
                 {treeNodeId === currentNode.id ? (
                   <AddNodeModal

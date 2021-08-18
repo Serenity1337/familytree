@@ -16,12 +16,13 @@ export const AddNodeModal = (props) => {
   const findNode = (tree, currentNode) => {
     if (tree.id === currentNode.id) {
       tree.descendants = [...tree.descendants, profile]
+
       return tree
     } else {
       tree.descendants.map((node, index) => {
         if (node.id === currentNode.id) {
           node.descendants = [...node.descendants, profile]
-          return node
+          return tree
         } else {
           return findNode(node, currentNode)
         }
@@ -30,9 +31,10 @@ export const AddNodeModal = (props) => {
     return tree
   }
   const addNodeHandler = (event) => {
+    const treeCopy = { ...props.tree }
     event.preventDefault()
-    console.log(props)
-    const fullTree = findNode(props.tree, props.currentNode)
+    const fullTree = findNode(treeCopy, props.currentNode)
+    console.log(fullTree)
     props.settree(fullTree)
     props.settreeNodeId(null)
   }
