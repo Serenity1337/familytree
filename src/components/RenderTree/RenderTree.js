@@ -100,7 +100,7 @@ export const RenderTree = (props) => {
     if (currentNode.descendants.length > 0) {
       currentNode.descendants.map((profile, index) => {
         elements.push(
-          <span style={{ marginTop: '30px' }}>
+          <span style={{ marginTop: '30px', width: '50%' }}>
             {RenderTreeHandler(profile)}
           </span>
         )
@@ -111,6 +111,7 @@ export const RenderTree = (props) => {
             style={{
               display: 'flex',
               justifyContent: 'center',
+              alignItems: 'flex-end',
             }}
           >
             {elements}
