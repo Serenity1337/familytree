@@ -82,13 +82,10 @@ export const EditNodeModal = (props) => {
         <div
           style={{ display: 'flex', justifyContent: 'left', marginTop: '10px' }}
         >
-          <button
-            style={{ marginRight: '65px' }}
-            onClick={cancelEditNodeHandler}
-          >
-            cancel
+          <button type='submit' style={{ marginRight: '65px' }}>
+            save
           </button>
-          <button type='submit'>save</button>
+          <button onClick={cancelEditNodeHandler}>cancel</button>
         </div>
       </form>
     </div>
