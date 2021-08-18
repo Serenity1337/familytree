@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import AddNodeModal from '../../Modals/AddNodeModal'
+import EditNodeModal from '../../Modals/EditNodeModal'
 
 export const RenderTree = (props) => {
   const [treeNodeId, settreeNodeId] = useState(Number)
-  const toggleFormModal = (familyData) => {
-    settreeNodeId(familyData.id)
+  const [treeEditNodeId, settreeEditNodeId] = useState(Number)
+  const toggleFormModal = (currentNode) => {
+    settreeNodeId(currentNode.id)
+  }
+  const toggleEditFormModal = (currentNode) => {
+    settreeEditNodeId(currentNode.id)
   }
 
   const deleteNode = (tree, currentNode) => {
@@ -82,12 +87,25 @@ export const RenderTree = (props) => {
                 >
                   x
                 </span>
-                <span style={{ cursor: 'pointer' }}>edit</span>
+                <span
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => toggleEditFormModal(currentNode)}
+                >
+                  edit
+                </span>
                 {treeNodeId === currentNode.id ? (
                   <AddNodeModal
                     tree={props.tree}
                     currentNode={currentNode}
                     settreeNodeId={settreeNodeId}
+                    settree={props.settree}
+                  />
+                ) : null}
+                {treeEditNodeId === currentNode.id ? (
+                  <EditNodeModal
+                    tree={props.tree}
+                    currentNode={currentNode}
+                    settreeEditNodeId={settreeNodeId}
                     settree={props.settree}
                   />
                 ) : null}
@@ -134,12 +152,25 @@ export const RenderTree = (props) => {
                 >
                   x
                 </span>
-                <span style={{ cursor: 'pointer' }}>edit</span>
+                <span
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => toggleEditFormModal(currentNode)}
+                >
+                  edit
+                </span>
                 {treeNodeId === currentNode.id ? (
                   <AddNodeModal
                     tree={props.tree}
                     currentNode={currentNode}
                     settreeNodeId={settreeNodeId}
+                    settree={props.settree}
+                  />
+                ) : null}
+                {treeEditNodeId === currentNode.id ? (
+                  <EditNodeModal
+                    tree={props.tree}
+                    currentNode={currentNode}
+                    settreeEditNodeId={settreeEditNodeId}
                     settree={props.settree}
                   />
                 ) : null}

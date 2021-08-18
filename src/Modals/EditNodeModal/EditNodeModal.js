@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
-export const AddNodeModal = (props) => {
-  const [profile, setprofile] = useState({})
-
-  useEffect(() => {
-    profile.id = new Date().getTime()
-    profile.descendants = []
-  }, [])
+export const EditNodeModal = (props) => {
+  const [profile, setprofile] = useState({ ...props.currentNode })
 
   const inputProfileHandler = (event) => {
     const profileCopy = { ...profile }
     profileCopy[event.target.name] = event.target.value
     setprofile(profileCopy)
   }
-  const cancelNodeHandler = () => {
-    props.settreeNodeId(null)
-  }
   const findNode = (tree, currentNode) => {
     if (tree.id === currentNode.id) {
-      tree.descendants = [...tree.descendants, profile]
+      tree.name = profile.name
+      tree.surname = profile.surname
 
       return tree
     } else {
       tree.descendants.map((node, index) => {
         if (node.id === currentNode.id) {
-          node.descendants = [...node.descendants, profile]
+          tree.name = profile.name
+          tree.surname = profile.surname
           return tree
         } else {
           return findNode(node, currentNode)
@@ -33,13 +27,15 @@ export const AddNodeModal = (props) => {
     }
     return tree
   }
-  const addNodeHandler = (event) => {
+  const editNodeHandler = (event) => {
     const treeCopy = { ...props.tree }
     event.preventDefault()
     const fullTree = findNode(treeCopy, props.currentNode)
-    console.log(fullTree)
     props.settree(fullTree)
-    props.settreeNodeId(null)
+    props.settreeEditNodeId(null)
+  }
+  const cancelEditNodeHandler = () => {
+    props.settreeEditNodeId(null)
   }
   return (
     <div
@@ -65,33 +61,31 @@ export const AddNodeModal = (props) => {
           opacity: '1',
           paddingLeft: '200px',
         }}
-        onSubmit={(event) => addNodeHandler(event)}
+        onSubmit={(event) => editNodeHandler(event)}
       >
         <input
           type='text'
-          placeholder='Enter your name'
+          placeholder='Enter your new name'
           style={{ display: 'block' }}
           onChange={inputProfileHandler}
           name='name'
+          value={profile.name}
         />
         <input
           type='text'
-          placeholder='Enter your surname'
+          placeholder='Enter your new surname'
           style={{ display: 'block', margin: '10px 0px' }}
           onChange={inputProfileHandler}
           name='surname'
-        />
-        <input
-          type='date'
-          name='dob'
-          id=''
-          style={{ display: 'block' }}
-          onChange={inputProfileHandler}
+          value={profile.surname}
         />
         <div
           style={{ display: 'flex', justifyContent: 'left', marginTop: '10px' }}
         >
-          <button style={{ marginRight: '65px' }} onClick={cancelNodeHandler}>
+          <button
+            style={{ marginRight: '65px' }}
+            onClick={cancelEditNodeHandler}
+          >
             cancel
           </button>
           <button type='submit'>save</button>
